@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pizza, Size, Base, Cheese, Topping, Crust
+from .models import Pizza, Size, Base, Cheese, Topping, Crust, Orders
 
 # Register your models here.
 @admin.register(Size)
@@ -10,7 +10,7 @@ class SizeAdmin(admin.ModelAdmin):
 @admin.register(Crust)
 class CrustAdmin(admin.ModelAdmin):
     list_display = ['crust', 'price']
-    search_fiels = ['crust']
+    search_fields = ['crust']
 
 @admin.register(Topping)
 class ToppingAdmin(admin.ModelAdmin):
@@ -36,3 +36,7 @@ class PizzaAdmin(admin.ModelAdmin):
     def display_toppings(self, obj):
         return ", ".join([t.topping for t in obj.topping.all()])
     display_toppings.short_description = "toppings"
+
+@admin.register(Orders)
+class OrdersAdmin(admin.ModelAdmin):
+    list_display = ['user', 'pizza']

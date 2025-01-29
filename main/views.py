@@ -3,6 +3,7 @@ from django.http import request
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from .forms import PizzaForm
+from .models import Orders, Pizza
 
 # Create your views here.
 def index(request):
@@ -34,6 +35,8 @@ def order(request):
     if request.method == "POST":
         form = PizzaForm(request.POST)
         if form.is_valid():
+            pizza = form.save()
+            Orders.objects.create(user=request.user, pizza=pizza)
             form.save()
             return redirect('index')
     else:
