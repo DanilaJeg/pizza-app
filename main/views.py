@@ -7,9 +7,6 @@ from django.contrib.auth import login
 def index(request):
     return render(request, 'index.html')
 
-def contact(request):
-    return render(request, 'contact.html')
-
 def signup(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
