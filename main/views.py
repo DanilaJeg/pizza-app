@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import request
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
+from .forms import PizzaForm
 
 # Create your views here.
 def index(request):
@@ -30,4 +31,11 @@ def login_view(request):
 
 
 def order(request):
-    return render(request, 'order.html')
+    if request.method == "POST":
+        form = PizzaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = PizzaForm()
+    return render(request, 'order.html', {'form': form})
