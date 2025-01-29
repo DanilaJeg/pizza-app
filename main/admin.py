@@ -29,8 +29,9 @@ class CheeseAdmin(admin.ModelAdmin):
 
 @admin.register(Pizza)
 class PizzaAdmin(admin.ModelAdmin):
-    list_display = ['size', 'crust', 'display_toppings', 'totalPrice']
+    list_display = ['size', 'crust', 'display_toppings', 'base', 'cheese', 'totalPrice']
     search_fields = ['size__name', 'crust__name']
+    filter_horizontal = ['topping'] 
 
     def display_toppings(self, obj):
         return ", ".join([t.topping for t in obj.topping.all()])
