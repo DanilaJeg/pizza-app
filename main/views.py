@@ -27,3 +27,7 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {"form": form})
+
+
+def order(request):
+    return render(request, 'order.html')
