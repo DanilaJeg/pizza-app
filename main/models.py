@@ -3,22 +3,22 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Size(models.Model):
-    size = models.CharField(max_length=50)
-    price = models.FloatField()
+    size = models.CharField(max_length=50, default="Medium")
+    price = models.FloatField(default=11.50)
 
     def __str__(self):
         return self.size
 
 class Crust(models.Model):
-    crust = models.CharField(max_length=50)
-    price = models.FloatField()
+    crust = models.CharField(max_length=50, default="Normal")
+    price = models.FloatField(default=0)
 
     def __str__(self):
         return self.crust
 
 class Base(models.Model):
-    base = models.CharField(max_length=50)
-    price = models.FloatField()
+    base = models.CharField(max_length=50, default="Regular")
+    price = models.FloatField(default=1.0)
 
     def __str__(self):
         return self.base
@@ -31,8 +31,8 @@ class Topping(models.Model):
         return self.topping
 
 class Cheese(models.Model):
-    cheese = models.CharField(max_length=50)
-    price = models.FloatField()
+    cheese = models.CharField(max_length=50, default="Mozarella")
+    price = models.FloatField(default=0.5)
 
     def __str__(self):
         return self.cheese
@@ -41,7 +41,7 @@ class Pizza(models.Model):
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
     crust = models.ForeignKey(Crust, on_delete=models.CASCADE)
     base = models.ForeignKey(Base, on_delete=models.CASCADE)
-    topping = models.ManyToManyField(Topping, blank=True)
+    topping = models.ManyToManyField(Topping, blank=True, default=None)
     cheese = models.ForeignKey(Cheese, on_delete=models.CASCADE)
 
     def totalPrice(self):

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import request
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
-from .forms import PizzaForm
+from .forms import PizzaForm, PaymentForm, AddressForm
 from .models import Orders, Pizza
 
 # Create your views here.
@@ -43,11 +43,21 @@ def order(request):
         form = PizzaForm()
     return render(request, 'order.html', {'form': form})
 
-def payment(request):
-    return render(request, 'payment.html')
 
 def prev(request):
     curr_user = request.user.username
     pizzas = Orders.objects.all()
     context = {'user': curr_user, 'pizzas': pizzas}
     return render(request, 'previous_order.html', context)
+
+
+def payment(request):
+    if request.method == "POST":
+        form = PaymentForm(request.POST)
+        
+        if form.is_valid():
+            data = form.cleaned_data
+            return redirect('index')
+    else:
+        form = PaymentForm()
+    return render(request, 'payment.html', {'form': form})
