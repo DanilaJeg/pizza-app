@@ -14,7 +14,7 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             login(request, form.save())
-            return redirect("order")
+            return redirect("previous_orders")
     else:
         form = UserCreationForm()
     return render(request, 'signup.html', {"form": form})
@@ -25,7 +25,7 @@ def login_view(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('order')
+            return redirect('previous_orders')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {"form": form})
@@ -38,7 +38,16 @@ def order(request):
             pizza = form.save()
             Orders.objects.create(user=request.user, pizza=pizza)
             form.save()
-            return redirect('index')
+            return redirect('payment')
     else:
         form = PizzaForm()
     return render(request, 'order.html', {'form': form})
+
+def payment(request):
+    return render(request, 'payment.html')
+
+def prev(request):
+    curr_user = request.user.username
+    pizzas = Orders.objects.all()
+    context = {'user': curr_user, 'pizzas': pizzas}
+    return render(request, 'previous_order.html', context)

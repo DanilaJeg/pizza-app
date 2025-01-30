@@ -49,7 +49,8 @@ class Pizza(models.Model):
         return self.size.price + self.crust.price + self.base.price + toppings + self.cheese.price
 
     def __str__(self):
-        return f"{self.size} pizza with {self.crust} crust and {self.base} base"
+        toppings = [t.topping for t in self.topping.all()]
+        return f"{self.size} pizza with {self.crust} crust and {self.base} base. Toppings: {toppings}."
     
 class Orders(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
