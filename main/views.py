@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import request
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
@@ -36,9 +36,9 @@ def order(request):
         form = PizzaForm(request.POST)
         if form.is_valid():
             pizza = form.save()
-            Orders.objects.create(user=request.user, pizza=pizza)
-            form.save()
-            return redirect('payment')
+            order = Orders.objects.create(user=request.user, pizza=pizza)
+            print(order.id)
+            return redirect('payment', order_id=order.id)
     else:
         form = PizzaForm()
     return render(request, 'order.html', {'form': form})
@@ -51,16 +51,21 @@ def prev(request):
     return render(request, 'previous_order.html', context)
 
 
-def payment(request):
+def payment(request, order_id):
+    order = get_object_or_404(Orders, id=order_id)
+
     if request.method == "POST":
-        payment = PaymentForm(request.POST)
-        address = AddressForm(request.POST)
+        payment_form = PaymentForm(request.POST)
+        address_form = AddressForm(request.POST)
         
-        if payment.is_valid() and address.is_valid():
-            pData = payment.cleaned_data
-            aData = address.cleaned_data
+        if payment_form.is_valid() and address_form.is_valid():
+
+            address = address_form.save()
+            order.address = address
+            order.save()
+
             return redirect('index')
     else:
-        payment = PaymentForm()
-        address = AddressForm()
-    return render(request, 'payment.html', {'payment': payment, 'address': address})
+        payment_form = PaymentForm()
+        address_form = AddressForm()
+    return render(request, 'payment.html', {'payment': payment_form, 'address': address_form})

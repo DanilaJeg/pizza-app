@@ -39,4 +39,4 @@ class PizzaAdmin(admin.ModelAdmin):
 
 @admin.register(Orders)
 class OrdersAdmin(admin.ModelAdmin):
-    list_display = ['user', 'pizza']
+    list_display = ['user', 'pizza', 'address']
