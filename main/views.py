@@ -36,9 +36,7 @@ def order(request):
         form = PizzaForm(request.POST)
         if form.is_valid():
             pizza = form.save()
-            order = Orders.objects.create(user=request.user, pizza=pizza)
-            print(order.id)
-            return redirect('payment', order_id=order.id)
+            return redirect('payment', pizza=pizza.id)
     else:
         form = PizzaForm()
     return render(request, 'order.html', {'form': form})
@@ -51,20 +49,20 @@ def prev(request):
     return render(request, 'previous_order.html', context)
 
 
-def payment(request, order_id):
-    order = get_object_or_404(Orders, id=order_id)
+def payment(request, pizza):
+    pizza = get_object_or_404(Pizza, id=pizza)
 
     if request.method == "POST":
         payment_form = PaymentForm(request.POST)
         address_form = AddressForm(request.POST)
         
         if payment_form.is_valid() and address_form.is_valid():
-
+            # order is only placed after payment. 
             address = address_form.save()
-            order.address = address
+            order = Orders.objects.create(user=request.user, pizza=pizza, address=address)
             order.save()
 
-            return redirect('order_complete', order_id)
+            return redirect('order_complete', order.id)
     else:
         payment_form = PaymentForm()
         address_form = AddressForm()
