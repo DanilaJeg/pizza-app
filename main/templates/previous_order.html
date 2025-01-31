@@ -5,9 +5,7 @@ Previous Orders
 {% block content %}
 <h1>Hello {{user}}</h1>
 {% for i in pizzas %}
-    {% if user == i.user.username %}
-        <ul>{{i}}</ul>
-    {% endif %}
+    <ul>{{i}}</ul>
 {% endfor %}
 <p>If you wish to create a new order please click <a href="{% url 'order' %}">here</a></p>
 {% endblock %}

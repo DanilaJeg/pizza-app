@@ -43,8 +43,8 @@ def order(request):
 
 
 def prev(request):
-    curr_user = request.user.username
-    pizzas = Orders.objects.all()
+    curr_user = request.user
+    pizzas = Orders.objects.filter(user=curr_user)
     context = {'user': curr_user, 'pizzas': pizzas}
     return render(request, 'previous_order.html', context)
 
