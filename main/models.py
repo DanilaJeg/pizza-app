@@ -44,6 +44,9 @@ class Pizza(models.Model):
     topping = models.ManyToManyField(Topping, blank=True, default=None)
     cheese = models.ForeignKey(Cheese, on_delete=models.CASCADE)
 
+    def allToppings(self):
+        return [t.topping for t in self.topping.all()]
+
     def totalPrice(self):
         toppings = sum(t.price for t in self.topping.all())
         return self.size.price + self.crust.price + self.base.price + toppings + self.cheese.price

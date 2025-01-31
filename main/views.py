@@ -64,8 +64,13 @@ def payment(request, order_id):
             order.address = address
             order.save()
 
-            return redirect('index')
+            return redirect('order_complete', order_id)
     else:
         payment_form = PaymentForm()
         address_form = AddressForm()
     return render(request, 'payment.html', {'payment': payment_form, 'address': address_form})
+
+def order_complete(request, order_id):
+    order = get_object_or_404(Orders, id=order_id)
+    toppings = order.pizza.allToppings()
+    return render(request, 'order_complete.html', {"order": order, "toppings": toppings})
