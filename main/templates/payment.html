@@ -2,10 +2,15 @@
 {% block title %}
 {% endblock %}
 {% block content %}
-<h1>PAYMENT</h1>
-<form method="POST">
+<form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Payment</button>
+    
+    <h2>Payment Details</h2>
+    {{ payment.as_p }}
+
+    <h2>Billing Address</h2>
+    {{ address.as_p }}
+
+    <button type="submit">Submit</button>
 </form>
 {% endblock %}

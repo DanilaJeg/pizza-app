@@ -53,11 +53,14 @@ def prev(request):
 
 def payment(request):
     if request.method == "POST":
-        form = PaymentForm(request.POST)
+        payment = PaymentForm(request.POST)
+        address = AddressForm(request.POST)
         
-        if form.is_valid():
-            data = form.cleaned_data
+        if payment.is_valid() and address.is_valid():
+            pData = payment.cleaned_data
+            aData = address.cleaned_data
             return redirect('index')
     else:
-        form = PaymentForm()
-    return render(request, 'payment.html', {'form': form})
+        payment = PaymentForm()
+        address = AddressForm()
+    return render(request, 'payment.html', {'payment': payment, 'address': address})
