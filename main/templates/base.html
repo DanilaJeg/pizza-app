@@ -12,9 +12,13 @@
     <main>
         <nav>
             <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'order' %}">Order</a></li>
             <li><a href="{% url 'signup' %}">Signup</a></li>
             <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'order' %}">Order</a></li>
+            <form id="logout-form" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit"> Logout</button>
+            </form>
         </nav>
         {% block content%}
         {% endblock %}

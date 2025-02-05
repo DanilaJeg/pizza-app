@@ -30,7 +30,6 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {"form": form})
 
-
 def order(request):
     if request.method == "POST":
         form = PizzaForm(request.POST)
