@@ -27,6 +27,7 @@ class CheeseAdmin(admin.ModelAdmin):
     list_display = ['cheese', 'price']
     search_fields = ['cheese']
 
+''' #Probably better not to have this as this will have so many pizzas building uup
 @admin.register(Pizza)
 class PizzaAdmin(admin.ModelAdmin):
     list_display = ['size', 'crust', 'display_toppings', 'base', 'cheese', 'totalPrice']
@@ -37,6 +38,9 @@ class PizzaAdmin(admin.ModelAdmin):
         return ", ".join([t.topping for t in obj.topping.all()])
     display_toppings.short_description = "toppings"
 
+    # i might add a model for the home page where they can select pre made pizzas
+    # also need to somehow make the previous order pizzas selectable
+'''
 @admin.register(Orders)
 class OrdersAdmin(admin.ModelAdmin):
     list_display = ['user', 'pizza', 'address']
