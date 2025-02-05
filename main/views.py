@@ -31,6 +31,8 @@ def login_view(request):
     return render(request, 'login.html', {"form": form})
 
 def order(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
     if request.method == "POST":
         form = PizzaForm(request.POST)
         if form.is_valid():
