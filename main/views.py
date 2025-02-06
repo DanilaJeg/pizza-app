@@ -47,6 +47,7 @@ def order(request):
         form = PizzaForm()
     return render(request, 'order.html', {'form': form})
 
+@login_required
 def cart(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     pizzas = cart.pizzas.all()
@@ -91,4 +92,6 @@ def payment(request):
 @login_required
 def order_complete(request, order_id):
     order = get_object_or_404(Orders, id=order_id)
+    if order.user != request.user:
+        return redirect('/')
     return render(request, 'order_complete.html', {"order": order})
