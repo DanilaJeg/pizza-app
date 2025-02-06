@@ -45,3 +45,8 @@ class PizzaAdmin(admin.ModelAdmin):
 class OrdersAdmin(admin.ModelAdmin):
     list_display = ['user', 'pizza', 'address']
 '''
+@admin.register(Orders)
+class OrdersAdmin(admin.ModelAdmin):
+    list_display = ['user', 'address']
+
+admin.site.register(Pizza)

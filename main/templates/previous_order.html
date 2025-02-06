@@ -2,10 +2,39 @@
 {% block title %}
 Previous Orders
 {% endblock %}
+
 {% block content %}
-<h1>Hello {{user}}</h1>
-{% for i in pizzas %}
-    <ul>{{i}}</ul>
-{% endfor %}
-<p>If you wish to create a new order please click <a href="{% url 'order' %}">here</a></p>
+<h1>Previous Orders for {{ user.username }}</h1>
+
+{% if orders %}
+    <ul>
+        {% for order in orders %}
+            <li>
+                <p><strong>Order #{{ order.id }}</strong> - Total: €{{ order.total_price }}</p>
+                <p>Delivery Address: {{ order.address }}</p>
+                
+                <h4>Pizzas in this order:</h4>
+                <ul>
+                    {% for pizza in order.pizza.all %}
+                        <li>
+                            <p><strong>{{ pizza.size }}</strong> pizza with {{ pizza.crust }} crust, {{ pizza.base }} base, and {{ pizza.cheese }} cheese.</p>
+                            <p>Toppings: 
+                                {% for topping in pizza.topping.all %}
+                                    {{ topping.topping }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    No toppings
+                                {% endfor %}
+                            </p>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <a href="{% url 'order_complete' order.id %}">View Details</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You have no previous orders.</p>
+{% endif %}
+
 {% endblock %}

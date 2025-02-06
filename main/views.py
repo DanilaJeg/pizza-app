@@ -58,10 +58,23 @@ def cart(request):
     return render(request, 'cart.html', {"cart": cart, "pizzas": pizzas})
 
 @login_required
+def remove_from_cart(request, pizza_id):
+    cart = get_object_or_404(Cart, user=request.user)  
+    pizza = get_object_or_404(Pizza, id=pizza_id)  
+    if cart.user != request.user:
+        return redirect('/')
+
+    if cart.pizzas.filter(id=pizza.id).exists():
+        cart.pizzas.remove(pizza)
+        pizza.delete()
+
+    return redirect('cart')
+
+@login_required
 def prev(request):
     curr_user = request.user
-    pizzas = Orders.objects.filter(user=curr_user)
-    context = {'user': curr_user, 'pizzas': pizzas}
+    orders = Orders.objects.filter(user=curr_user).order_by("-id")
+    context = {'user': curr_user, 'orders': orders}
     return render(request, 'previous_order.html', context)
 
 

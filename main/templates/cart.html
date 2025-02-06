@@ -3,14 +3,30 @@
 Cart
 {% endblock %}
 {% block content %}
-<ul>
-    {% for pizza in pizzas %}
-        <li>{{ pizza }} - €{{ pizza.totalPrice }}</li>
-    {% endfor %}
-</ul>
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit" name="checkout">Proceed to Payment</button>
-</form>
-<a href="{% url 'order' %}">Add Another Pizza</a>
+<h2>Your Cart</h2>
+
+{% if pizzas %}
+    <ul>
+        {% for pizza in pizzas %}
+            <li>
+                {{ pizza.size }} Pizza - €{{ pizza.totalPrice }} <br>
+                <form action="{% url 'remove_from_cart' pizza.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Remove</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="checkout">Proceed to Payment</button>
+    </form>
+
+    <a href="{% url 'order' %}">Add Another Pizza</a>
+{% else %}
+    <p>Your cart is empty.</p>
+    <a href="{% url 'order' %}">Order a Pizza</a>
+{% endif %}
+
 {% endblock %}
