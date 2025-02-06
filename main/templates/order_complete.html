@@ -1,23 +1,36 @@
 {% extends 'base.html' %}
+
 {% block title %}
 Order Complete
 {% endblock %}
+
 {% block content %}
-<h1>thank you for your order, {{order.user.username}} !!</h1>
-<p>You ordered a delicious {{order.pizza.size}} pizza<br>
-With our {{order.pizza.crust}}, complimented by our {{order.pizza.base}} base with {{user.pizza.cheese}} cheese. <br>
-</p>
-{% if toppings %}
-    {% for i in toppings %}
-        <ul>
-            <p>
-                {{i}}
-            </p>
-        </ul>
-    {% endfor %}
+<h1>Thank you for your order, {{ order.user.username }}!</h1>
+
+{% if order.pizza.all %}
+    <p>You ordered the following pizzas:</p>
+    <ul>
+        {% for pizza in order.pizza.all %}
+            <li>
+                {{ pizza.size }} Pizza <br>
+                - Crust: {{ pizza.crust }} <br>
+                - Base: {{ pizza.base }} <br>
+                - Cheese: {{ pizza.cheese }} <br>
+                - Toppings: 
+                {% if pizza.topping.all %}
+                    {{ pizza.allToppings|join:", " }}
+                {% else %}
+                    No toppings
+                {% endif %}
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
 {% else %}
-        <p>With no toppings</p>
+    <p>You have no pizzas in your order.</p>
 {% endif %}
-<h3> Delivering to: </h3>
-<p>{{order.address}}</p>
+
+<h3>Delivering to:</h3>
+<p>{{ order.address }}</p>
+
 {% endblock %}

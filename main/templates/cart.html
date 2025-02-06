@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}
+Cart
+{% endblock %}
+{% block content %}
+<ul>
+    {% for pizza in pizzas %}
+        <li>{{ pizza }} - €{{ pizza.totalPrice }}</li>
+    {% endfor %}
+</ul>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" name="checkout">Proceed to Payment</button>
+</form>
+<a href="{% url 'order' %}">Add Another Pizza</a>
+{% endblock %}

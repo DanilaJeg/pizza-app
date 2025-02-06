@@ -80,11 +80,25 @@ class Address(models.Model):
         else:
             return f"{self.name}, {self.address1}, {self.town}, {self.county}, {self.eircode}"
 
-class Orders(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
-    #cart = 
-    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    pizzas = models.ManyToManyField(Pizza, blank=True)
+
+    def total_price(self):
+        return sum(pizza.totalPrice() for pizza in self.pizzas.all())
 
     def __str__(self):
-        return f"{self.user.username} ordered pizza {self.pizza}"
+        return f"Cart of {self.user.username}"
+
+
+class Orders(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    #pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+    pizza = models.ManyToManyField(Pizza)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def total_price(self):
+        return sum(p.totalPrice() for p in self.pizza.all())
+
+    def __str__(self):
+        return f"Order {self.id} by {self.user.username}"

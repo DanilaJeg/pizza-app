@@ -3,7 +3,7 @@ from django.http import request
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from .forms import PizzaForm, PaymentForm, AddressForm
-from .models import Orders, Pizza
+from .models import Orders, Pizza, Cart
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -38,10 +38,23 @@ def order(request):
         form = PizzaForm(request.POST)
         if form.is_valid():
             pizza = form.save()
-            return redirect('payment', pizza=pizza.id)
+
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            cart.pizzas.add(pizza)
+
+            return redirect('cart')
     else:
         form = PizzaForm()
     return render(request, 'order.html', {'form': form})
+
+def cart(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    pizzas = cart.pizzas.all()
+
+    if request.method == "POST":
+        if "checkout" in request.POST:
+            return redirect("payment")
+    return render(request, 'cart.html', {"cart": cart, "pizzas": pizzas})
 
 @login_required
 def prev(request):
@@ -52,19 +65,23 @@ def prev(request):
 
 
 @login_required
-def payment(request, pizza):
-    pizza = get_object_or_404(Pizza, id=pizza)
+def payment(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    pizzas = cart.pizzas.all()
 
     if request.method == "POST":
         payment_form = PaymentForm(request.POST)
         address_form = AddressForm(request.POST)
         
         if payment_form.is_valid() and address_form.is_valid():
+
             # order is only placed after payment. 
             address = address_form.save()
-            order = Orders.objects.create(user=request.user, pizza=pizza, address=address)
+            order = Orders.objects.create(user=request.user, address=address)
+            order.pizza.set(pizzas)
             order.save()
 
+            cart.pizzas.clear()
             return redirect('order_complete', order.id)
     else:
         payment_form = PaymentForm()
@@ -74,5 +91,4 @@ def payment(request, pizza):
 @login_required
 def order_complete(request, order_id):
     order = get_object_or_404(Orders, id=order_id)
-    toppings = order.pizza.allToppings()
-    return render(request, 'order_complete.html', {"order": order, "toppings": toppings})
+    return render(request, 'order_complete.html', {"order": order})

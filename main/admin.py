@@ -40,7 +40,8 @@ class PizzaAdmin(admin.ModelAdmin):
 
     # i might add a model for the home page where they can select pre made pizzas
     # also need to somehow make the previous order pizzas selectable
-'''
+
 @admin.register(Orders)
 class OrdersAdmin(admin.ModelAdmin):
     list_display = ['user', 'pizza', 'address']
+'''
