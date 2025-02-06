@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from .forms import PizzaForm, PaymentForm, AddressForm
 from .models import Orders, Pizza
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -42,7 +43,7 @@ def order(request):
         form = PizzaForm()
     return render(request, 'order.html', {'form': form})
 
-
+@login_required
 def prev(request):
     curr_user = request.user
     pizzas = Orders.objects.filter(user=curr_user)
@@ -50,6 +51,7 @@ def prev(request):
     return render(request, 'previous_order.html', context)
 
 
+@login_required
 def payment(request, pizza):
     pizza = get_object_or_404(Pizza, id=pizza)
 
@@ -69,6 +71,7 @@ def payment(request, pizza):
         address_form = AddressForm()
     return render(request, 'payment.html', {'payment': payment_form, 'address': address_form})
 
+@login_required
 def order_complete(request, order_id):
     order = get_object_or_404(Orders, id=order_id)
     toppings = order.pizza.allToppings()

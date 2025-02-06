@@ -80,10 +80,10 @@ class Address(models.Model):
         else:
             return f"{self.name}, {self.address1}, {self.town}, {self.county}, {self.eircode}"
 
-
 class Orders(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+    #cart = 
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
