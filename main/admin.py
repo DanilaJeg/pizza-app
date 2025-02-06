@@ -44,9 +44,17 @@ class PizzaAdmin(admin.ModelAdmin):
 @admin.register(Orders)
 class OrdersAdmin(admin.ModelAdmin):
     list_display = ['user', 'pizza', 'address']
-'''
 @admin.register(Orders)
 class OrdersAdmin(admin.ModelAdmin):
     list_display = ['user', 'address']
+'''
+class PizzaInline(admin.TabularInline):
+    model = Orders.pizza.through 
+    extra = 0 
 
-admin.site.register(Pizza)
+class OrdersAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'total_price', 'address')
+    inlines = [PizzaInline]
+    exclude = ('pizza',)
+
+admin.site.register(Orders, OrdersAdmin)
