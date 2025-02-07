@@ -1,12 +1,105 @@
 {% extends 'base.html' %}
+
 {% block title %}
-Sign Up
+Sign Up for Pizza Paradise 🍕
 {% endblock %}
+
 {% block content %}
-<h1>Registration</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form }}
-    <button>Submit</button>
-</form>
+<style>
+    .signup-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .signup-card {
+        background: white;
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+    }
+
+    .form-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .signup-form input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .signup-form input:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+        outline: none;
+    }
+
+    .signup-btn {
+        background: linear-gradient(45deg, #FF4B2B, #FF416C);
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .login-link {
+        color: #FF416C;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .login-link:hover {
+        color: #fc2702;
+    }
+</style>
+
+<div class="container signup-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-6">
+            <div class="card signup-card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h1 class="display-4 form-title">🎉 Join Pizza Paradise!</h1>
+                        <p class="text-muted">Create an account and start your pizza adventure</p>
+                    </div>
+                    
+                    <form method="POST" class="signup-form">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn signup-btn" type="submit">
+                                Sign Up 🚀
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p class="mb-0">
+                            Already have an account? 
+                            <a href="{% url 'login' %}" class="login-link">
+                                Log in here 🔑
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    🍕 More pizza, more happiness!
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

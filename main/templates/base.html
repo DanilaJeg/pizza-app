@@ -7,31 +7,234 @@
         {% block title %}
         {% endblock %}
     </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1d7874;
+            --accent-color: #e76f51;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        
+        main {
+            flex: 1;
+            padding-top: 80px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .navbar-custom {
+            background: linear-gradient(135deg, #1a6d68 0%, #1d7874 100%);
+        }
+        
+        .footer-custom {
+            background: linear-gradient(135deg, #1d7874 0%, #1a6d68 100%);
+        }
+        
+        /* Unified Button Styling */
+        .nav-btn, .navbar-brand {
+            margin: 0 8px;
+            padding: 8px 20px !important;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            text-decoration: none !important;
+        }
+        
+        .nav-btn:hover, .navbar-brand:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Logout Button */
+        .logout-btn {
+            color: white !important;
+            background: #ff4444 !important;
+            font-weight: bold;
+            border-radius: 6px;
+            padding: 8px 20px !important;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .logout-btn:hover {
+            background: #cc0000 !important;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Premium Card Design */
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* Enhanced Form Controls */
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(29, 120, 116, 0.25);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
 </head>
 <body>
-    <main>
-        <nav>
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="{% url 'order' %}">Order</a></li>
-                <li><a href="{% url 'previous_orders' %}">Previous Orders</a></li>
-                <li><a href="{% url 'cart' %}">View Cart</a></li>
-                <form id="logout-form" action="{% url 'logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit"> Logout</button>
-                </form>
-            {% else %}
-                <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="{% url 'signup' %}">Signup</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-            {% endif %}
-                
-        </nav>
-        {% block content%}
-        {% endblock %}
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <i class="fas fa-pizza-slice me-2"></i>Pizza Palace
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn" href="{% url 'order' %}">
+                                <i class="fas fa-utensils me-2"></i>Order
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn" href="{% url 'previous_orders' %}">
+                                <i class="fas fa-history me-2"></i>History
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn" href="{% url 'cart' %}">
+                                <i class="fas fa-shopping-cart me-2"></i>Cart
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <form id="logout-form" action="{% url 'logout' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn logout-btn">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn" href="{% url 'signup' %}">
+                                <i class="fas fa-user-plus me-2"></i>Sign Up
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="content-card">
+            {% block content %}
+            {% endblock %}
+        </div>
     </main>
-    <footer>
-        <h1>Copyright @Danila 1/1/2025.</h1>
+
+    <footer class="footer-custom mt-auto text-white">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-pizza-slice me-2"></i>Pizza Palace
+                    </h5>
+                    <p class="text-light">Serving happiness since 2024</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Contact</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-phone me-2"></i>+1 800-PIZZA
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope me-2"></i>hello@pizzapalace.com
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Follow Us</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-white me-3">
+                            <i class="fab fa-facebook fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-white">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="text-center mb-0">
+                © 2024 <i class="fas fa-pizza-slice"></i> Pizza Palace. Crafted with ❤️ by Danila
+            </p>
+        </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Loading state example
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if(submitBtn) {
+                    submitBtn.innerHTML = `
+                        <i class="fas fa-spinner loading-spinner me-2"></i>
+                        Processing...
+                    `;
+                    submitBtn.disabled = true;
+                }
+            });
+        });
+    </script>
 </body>
 </html>

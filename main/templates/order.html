@@ -1,12 +1,169 @@
 {% extends 'base.html' %}
+
 {% block title %}
-Order Pizza
+Customize Your Pizza 🍕
 {% endblock %}
+
 {% block content %}
-<h1>Choose your toppings</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Pizza</button>
-</form>
+<style>
+    .order-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .order-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .order-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .order-form label {
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .order-form input,
+    .order-form select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .order-form input:focus,
+    .order-form select:focus {
+        border-color:  #4CAF50;;
+        box-shadow: 0 0 8px rgba(174, 255, 43, 0.2);
+        outline: none;
+    }
+
+    .order-form input[type="checkbox"] {
+        width: auto;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+
+    .order-form .checkbox-group label {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .order-btn {
+        background: linear-gradient(45deg, #FF4B2B, #FF416C);
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .order-btn:hover {
+        background: linear-gradient(45deg, #fc2702, #f5073e);
+        transform: translateY(-2px);
+    }
+
+    /* Topping Styles */
+    .topping-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .topping-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .topping-item input[type="checkbox"] {
+        margin-right: 5px;
+    }
+
+    /* Adjustments for smaller screens if needed */
+    @media (max-width: 768px) {
+        .topping-group {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Error Styling */
+    .errorlist {
+        color: red;
+        font-size: smaller;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="container order-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-6">
+            <div class="card order-card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h1 class="display-5 order-title">🍕 Build Your Perfect Pizza</h1>
+                        <p class="text-muted">Select your favorite ingredients and enjoy!</p>
+                    </div>
+
+                    <form method="POST" class="order-form">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}
+
+                                {% if field.field.widget.input_type == 'checkbox' %}  <div class="topping-group">
+                                        {% for choice in field.field.choices %}
+                                            <div class="topping-item">
+                                                <input type="checkbox" name="{{ field.html_name }}" id="id_{{ field.id_for_label }}_{{ choice.0 }}" value="{{ choice.0 }}" {% if choice.0 in field.value %}checked{% endif %}>
+                                                <label for="id_{{ field.id_for_label }}_{{ choice.0 }}">{{ choice.1 }}</label>
+                                            </div>
+                                        {% endfor %}
+                                        {% if field.errors %}
+                                            <ul class="errorlist">
+                                                {% for error in field.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                {% else %}  {{ field }}  {% if field.errors %}
+                                        <ul class="errorlist">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-grid gap-2">
+                            <button class="btn order-btn" type="submit">Create Pizza 🚀</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">🍕 More toppings, more fun!</small>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

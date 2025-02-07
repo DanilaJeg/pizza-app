@@ -53,7 +53,8 @@ class Pizza(models.Model):
 
     def __str__(self):
         toppings = [t.topping for t in self.topping.all()]
-        return f"{self.size} pizza with {self.crust} crust and {self.base} base. Toppings: {toppings}."
+        string_toppings = ", ".join(toppings)
+        return f"{self.size} pizza with {self.crust} crust and {self.base} base. With the following toppings: {string_toppings}."
 
 class Address(models.Model):
     COUNTIES = [

@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from .forms import PizzaForm, PaymentForm, AddressForm
 from .models import Orders, Pizza, Cart
 from django.contrib.auth.decorators import login_required
+import time
 
 # Create your views here.
 def index(request):
@@ -51,11 +52,12 @@ def order(request):
 def cart(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     pizzas = cart.pizzas.all()
+    total = cart.total_price()
 
     if request.method == "POST":
-        if "checkout" in request.POST:
-            return redirect("payment")
-    return render(request, 'cart.html', {"cart": cart, "pizzas": pizzas})
+        time.sleep(1)
+        return redirect("payment")
+    return render(request, 'cart.html', {"cart": cart, "pizzas": pizzas, 'total': total})
 
 @login_required
 def remove_from_cart(request, pizza_id):

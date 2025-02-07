@@ -4,21 +4,75 @@ Previous Orders
 {% endblock %}
 
 {% block content %}
-<h1>Previous Orders for {{ user.username }}</h1>
+<style>
+    .orders-container {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-{% if orders %}
-    <ul>
+    .order-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .order-card:hover {
+        transform: scale(1.02);
+    }
+
+    .order-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .order-info {
+        color: #555;
+    }
+
+    .topping-list {
+        font-style: italic;
+    }
+
+    .order-link {
+        display: inline-block;
+        background: linear-gradient(45deg, #FF4B2B, #FF416C);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .order-link:hover {
+        background: #fc2702;
+    }
+</style>
+
+<div class="orders-container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 order-title">📜 Previous Orders for {{ user.username }}</h1>
+    </div>
+
+    {% if orders %}
         {% for order in orders %}
-            <li>
-                <p><strong>Order #{{ order.id }}</strong> - Total: €{{ order.total_price }}</p>
-                <p>Delivery Address: {{ order.address }}</p>
+            <div class="order-card">
+                <h3 class="order-title">Order #{{ order.id }}</h3>
+                <p class="order-info">Total: <strong>€{{ order.total_price }}</strong></p>
+                <p class="order-info">Delivery Address: {{ order.address }}</p>
                 
-                <h4>Pizzas in this order:</h4>
+                <h4 class="mt-3">Pizzas in this order:</h4>
                 <ul>
                     {% for pizza in order.pizza.all %}
                         <li>
-                            <p><strong>{{ pizza.size }}</strong> pizza with {{ pizza.crust }} crust, {{ pizza.base }} base, and {{ pizza.cheese }} cheese.</p>
-                            <p>Toppings: 
+                            <p class="order-info"><strong>{{ pizza.size }}</strong> pizza with {{ pizza.crust }} crust, {{ pizza.base }} base, and {{ pizza.cheese }} cheese.</p>
+                            <p class="topping-list">Toppings: 
                                 {% for topping in pizza.topping.all %}
                                     {{ topping.topping }}{% if not forloop.last %}, {% endif %}
                                 {% empty %}
@@ -28,13 +82,14 @@ Previous Orders
                         </li>
                     {% endfor %}
                 </ul>
-
-                <a href="{% url 'order_complete' order.id %}">View Details</a>
-            </li>
+                <a href="{% url 'order_complete' order.id %}" class="order-link">View Details</a>
+            </div>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>You have no previous orders.</p>
-{% endif %}
+    {% else %}
+        <div class="text-center py-5">
+            <h3 class="order-title">You have no previous orders.  <a href="{% url 'order' %}">Order here</a></h3>
+        </div>
+    {% endif %}
+</div>
 
 {% endblock %}
