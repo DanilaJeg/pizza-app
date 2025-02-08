@@ -1,9 +1,242 @@
 {% extends 'base.html' %}
-{% block title %}
-Home
-{% endblock %}
+{% block title %}Build Your Perfect Pizza - Pizza Paradise 🍕{% endblock %}
 {% block content %}
-<p>
-    index page
-</p>
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                    url('https://images.unsplash.com/photo-1604382355076-af4b0eb60143?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        padding: 10rem 0;
+        text-align: center;
+        color: white;
+    }
+
+    .hero-section h1 {
+        font-size: 4.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-section p {
+        font-size: 1.75rem;
+        margin-bottom: 2.5rem;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-section .btn {
+        background: linear-gradient(45deg, #FF4B2B, #FF416C);
+        color: white;
+        padding: 1.25rem 3rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .hero-section .btn:hover {
+        transform: translateY(-5px);
+    }
+
+    /* How It Works Section */
+    .how-it-works-section {
+        padding: 6rem 0;
+        background: #f8f9fa;
+    }
+
+    .how-it-works-section h2 {
+        font-size: 2.75rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .how-it-works-section .step {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .how-it-works-section .step-icon {
+        font-size: 3rem;
+        color: #FF4B2B;
+        margin-bottom: 1rem;
+    }
+
+    .how-it-works-section .step h3 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .how-it-works-section .step p {
+        font-size: 1.1rem;
+        color: #666;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    /* Feature Section */
+    .feature-section {
+        padding: 6rem 0;
+        background: white;
+    }
+
+    .feature-section h2 {
+        font-size: 2.75rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .feature-section .feature-card {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .feature-section .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    }
+
+    .feature-section .feature-card h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .feature-section .feature-card p {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 6rem 0;
+        background: linear-gradient(45deg, #FF4B2B, #FF416C);
+        color: white;
+        text-align: center;
+    }
+
+    .cta-section h2 {
+        font-size: 2.75rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    .cta-section p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .cta-section .btn {
+        background: white;
+        color: #FF4B2B;
+        padding: 1.25rem 3rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .cta-section .btn:hover {
+        transform: translateY(-5px);
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <h1>Welcome to Pizza Palace 🍕</h1>
+        <p>Create your dream pizza with fresh ingredients, endless combinations, and unbeatable prices.</p>
+        <a href="{% url 'order' %}" class="btn">Start Building Your Pizza 🚀</a>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="how-it-works-section">
+    <div class="container">
+        <h2>How It Works</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="step">
+                    <div class="step-icon">🍕</div>
+                    <h3>Choose Your Size</h3>
+                    <p>Pick from Small (€11), Medium (€12.50), or Large (€14).</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step">
+                    <div class="step-icon">🧀</div>
+                    <h3>Select Your Cheese</h3>
+                    <p>Cheddar or Mozzarella (+€0.50), Ricotta or Parmesan (+€0.75).</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step">
+                    <div class="step-icon">🥖</div>
+                    <h3>Pick Your Crust</h3>
+                    <p>Gluten-Free (+€1.00), Stuffed Crust (+€0.50), or classic Thick/Thin (FREE).</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step">
+                    <div class="step-icon">🍅</div>
+                    <h3>Add Your Base</h3>
+                    <p>No Base (FREE), Regular (+€1.00), BBQ or Specialty (+€1.50).</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <p class="lead">Each topping is just <span class="price-badge">+€0.50</span>! Build your perfect pizza with over 10 fresh toppings.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feature Section -->
+<div class="feature-section">
+    <div class="container">
+        <h2>Why Choose Us?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3>Fresh Ingredients</h3>
+                    <p>We use only the freshest ingredients to ensure every bite is bursting with flavor.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3>Unlimited Combinations</h3>
+                    <p>With over 50 toppings to choose from, the possibilities are endless.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h3>Perfectly Priced</h3>
+                    <p>Enjoy high-quality pizzas at prices that won't break the bank.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+    <div class="container">
+        <h2>Ready to Create Your Masterpiece?</h2>
+        <p>Start building your perfect pizza today and experience the taste of paradise.</p>
+        <a href="{% url 'order' %}" class="btn">Get Started Now 🍕</a>
+    </div>
+</div>
 {% endblock %}

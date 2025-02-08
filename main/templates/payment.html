@@ -1,16 +1,110 @@
 {% extends 'base.html' %}
-{% block title %}
-{% endblock %}
+{% block title %}Secure Checkout - Pizza Paradise 🍕{% endblock %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    
-    <h2>Payment Details</h2>
-    {{ payment.as_p }}
+<style>
+    .checkout-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
 
-    <h2>Billing Address</h2>
-    {{ address.as_p }}
+    .checkout-card {
+        background: white;
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+    }
 
-    <button type="submit">Submit</button>
-</form>
+    .form-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .checkout-form input,
+    .checkout-form select {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .checkout-form input:focus,
+    .checkout-form select:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+        outline: none;
+    }
+
+    .checkout-btn {
+        background: linear-gradient(45deg, #FF4B2B, #FF416C);
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .section-title {
+        color: #FF416C;
+        border-bottom: 2px solid #FF416C;
+        padding-bottom: 10px;
+        margin: 25px 0;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container checkout-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-8">
+            <div class="card checkout-card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h1 class="display-4 form-title">💳 Checkout Time!</h1>
+                    </div>
+
+                    <form method="POST" class="checkout-form">
+                        {% csrf_token %}
+                        
+                        <h3 class="section-title">Payment Details 🔐</h3>
+                        <div class="row">
+                            {% for field in payment %}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <h3 class="section-title">Billing Address 🏠</h3>
+                        <div class="row">
+                            {% for field in address %}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn checkout-btn">
+                            Complete Order 🚀
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    🔒 Your payment information is securely encrypted
+                    <br>
+                    🍕 100% Satisfaction Guaranteed!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

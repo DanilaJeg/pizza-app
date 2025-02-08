@@ -7,89 +7,241 @@ Previous Orders
 <style>
     .orders-container {
         min-height: 80vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        padding: 2rem 1rem;
+        background: #f9f9f9;
+    }
+
+    .orders-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        max-width: 1300px;
+        margin: 0 auto;
     }
 
     .order-card {
         background: white;
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-        width: 80%;
-        margin-bottom: 20px;
+        border-radius: 18px;
+        padding: 1.8rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f0f0f0;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
 
     .order-card:hover {
-        transform: scale(1.02);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-header {
+        margin-bottom: 1.2rem;
+        position: relative;
+    }
+
+    .order-status {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #FF4B2B;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
     }
 
     .order-title {
         color: #2c3e50;
-        font-weight: 600;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin: 0 0 0.5rem 0;
     }
 
-    .order-info {
-        color: #555;
+    .order-date {
+        color: #888;
+        font-size: 0.9rem;
+    }
+
+    .pizza-list {
+        flex-grow: 1;
+        margin: 1.2rem 0;
+    }
+
+    .pizza-item {
+        margin-bottom: 1.2rem;
+        padding: 1rem;
+        background: #fff9f8;
+        border-radius: 12px;
+        border-left: 4px solid #FF4B2B;
+        transition: transform 0.2s ease;
+    }
+
+    .pizza-item:hover {
+        transform: translateX(5px);
+    }
+
+    .pizza-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+        vertical-align: middle;
     }
 
     .topping-list {
-        font-style: italic;
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.6rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .topping-badge {
+        background: rgba(255, 75, 43, 0.1);
+        color: #FF4B2B;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .order-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f5f5f5;
+    }
+
+    .order-price {
+        font-size: 1.3rem;
+        color: #FF4B2B;
+        font-weight: 800;
+        letter-spacing: -0.5px;
     }
 
     .order-link {
-        display: inline-block;
-        background: linear-gradient(45deg, #FF4B2B, #FF416C);
-        border: none;
+        background: linear-gradient(45deg, #FF4B2B, #FF285C);
         color: white;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 600;
+        padding: 0.6rem 1.5rem;
+        border-radius: 25px;
         text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
     }
 
     .order-link:hover {
-        background: #fc2702;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
+    }
+
+    .no-orders {
+        text-align: center;
+        padding: 4rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .no-orders-icon {
+        font-size: 4rem;
+        color: #FF4B2B;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .orders-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .order-card {
+            padding: 1.2rem;
+        }
+    }
+
+    /* Animation for empty state */
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .pizza-float {
+        animation: float 3s ease-in-out infinite;
     }
 </style>
 
 <div class="orders-container">
-    <div class="text-center mb-5">
-        <h1 class="display-4 order-title">📜 Previous Orders for {{ user.username }}</h1>
-    </div>
-
+    <h1 class="text-center mb-5 display-4" style="color: #2c3e50;">
+        🍕 Your Pizza Journey
+    </h1>
+    
     {% if orders %}
-        {% for order in orders %}
-            <div class="order-card">
-                <h3 class="order-title">Order #{{ order.id }}</h3>
-                <p class="order-info">Total: <strong>€{{ order.total_price }}</strong></p>
-                <p class="order-info">Delivery Address: {{ order.address }}</p>
-                
-                <h4 class="mt-3">Pizzas in this order:</h4>
-                <ul>
-                    {% for pizza in order.pizza.all %}
-                        <li>
-                            <p class="order-info"><strong>{{ pizza.size }}</strong> pizza with {{ pizza.crust }} crust, {{ pizza.base }} base, and {{ pizza.cheese }} cheese.</p>
-                            <p class="topping-list">Toppings: 
-                                {% for topping in pizza.topping.all %}
-                                    {{ topping.topping }}{% if not forloop.last %}, {% endif %}
-                                {% empty %}
-                                    No toppings
-                                {% endfor %}
-                            </p>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <a href="{% url 'order_complete' order.id %}" class="order-link">View Details</a>
-            </div>
-        {% endfor %}
+        <div class="orders-grid">
+            {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-status delivered">
+                        {% if forloop.first %}New!{% else %}Delivered{% endif %}
+                    </div>
+                    <div class="order-header">
+                        <h3 class="order-title">Order #{{ order.id }}</h3>
+                        <div class="order-date">
+                            {{ order.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                    
+                    <div class="pizza-list">
+                        {% for pizza in order.pizza.all %}
+                            <div class="pizza-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="https://img.icons8.com/color/48/pizza.png" class="pizza-icon" alt="Pizza">
+                                    <div>
+                                        <div class="font-weight-bold">{{ pizza.size }} {{ pizza.crust }}</div>
+                                        <div class="text-muted small">{{ pizza.base }} base · {{ pizza.cheese }}</div>
+                                    </div>
+                                </div>
+                                <div class="topping-list">
+                                    {% for topping in pizza.topping.all %}
+                                        <span class="topping-badge">{{ topping.topping }}</span>
+                                    {% empty %}
+                                        <span class="text-muted">No toppings</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="order-footer">
+                        <div class="order-price">€{{ order.total_price }}</div>
+                        <a href="{% url 'order_complete' order.id %}" class="order-link">
+                            <i class="fas fa-arrow-right"></i>
+                            Details
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
-        <div class="text-center py-5">
-            <h3 class="order-title">You have no previous orders.  <a href="{% url 'order' %}">Order here</a></h3>
+        <div class="no-orders">
+            <div class="pizza-float">🍕</div>
+            <h3 class="mb-3">Hungry for Pizza?</h3>
+            <p class="text-muted mb-4">Your pizza story begins here! Create your first masterpiece and join the pizza hall of fame.</p>
+            <a href="{% url 'order' %}" class="order-link">
+                Start Your Order
+                <i class="fas fa-chevron-right"></i>
+            </a>
         </div>
     {% endif %}
 </div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {% endblock %}

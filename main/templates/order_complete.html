@@ -1,36 +1,171 @@
 {% extends 'base.html' %}
-
-{% block title %}
-Order Complete
-{% endblock %}
-
+{% block title %}Order Complete - Pizza Paradise 🍕{% endblock %}
 {% block content %}
-<h1>Thank you for your order, {{ order.user.username }}!</h1>
+<style>
+    .order-complete-container {
+        min-height: 80vh;
+        padding: 4rem 1rem;
+        background: #f9f9f9;
+    }
 
-{% if order.pizza.all %}
-    <p>You ordered the following pizzas:</p>
-    <ul>
-        {% for pizza in order.pizza.all %}
-            <li>
-                {{ pizza.size }} Pizza <br>
-                - Crust: {{ pizza.crust }} <br>
-                - Base: {{ pizza.base }} <br>
-                - Cheese: {{ pizza.cheese }} <br>
-                - Toppings: 
-                {% if pizza.topping.all %}
-                    {{ pizza.allToppings|join:", " }}
-                {% else %}
-                    No toppings
-                {% endif %}
-            </li>
-            <br>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>You have no pizzas in your order.</p>
-{% endif %}
+    .confetti-card {
+        background: white;
+        border-radius: 18px;
+        padding: 3rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f0f0f0;
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+    }
 
-<h3>Delivering to:</h3>
-<p>{{ order.address }}</p>
+    .celebrate-icon {
+        font-size: 4rem;
+        color: #FF4B2B;
+        margin-bottom: 1.5rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .order-title {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .pizza-list {
+        margin: 2rem 0;
+    }
+
+    .pizza-item {
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        background: #fff9f8;
+        border-radius: 12px;
+        border-left: 4px solid #FF4B2B;
+        transition: transform 0.2s ease;
+    }
+
+    .pizza-detail {
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .topping-badge {
+        background: rgba(255, 75, 43, 0.1);
+        color: #FF4B2B;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin: 0.2rem;
+    }
+
+    .delivery-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f5f5f5;
+    }
+
+    .delivery-title {
+        color: #FF4B2B;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .delivery-address {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+    }
+
+    .tracking-button {
+        background: linear-gradient(45deg, #FF4B2B, #FF285C);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .tracking-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
+        color: white;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+</style>
+
+<div class="order-complete-container">
+    <div class="confetti-card">
+        <div class="text-center">
+            <div class="celebrate-icon">🎉</div>
+            <h1 class="order-title">Your Pizza Adventure Begins!</h1>
+            <p class="lead text-muted mb-4">Order #{{ order.id }} is being prepared with love</p>
+        </div>
+
+        {% if order.pizza.all %}
+            <div class="pizza-list">
+                <h3 class="delivery-title">Your Masterpieces 🎨</h3>
+                {% for pizza in order.pizza.all %}
+                    <div class="pizza-item">
+                        <div class="pizza-detail">
+                            <strong>{{ pizza.size }} Pizza</strong>
+                        </div>
+                        <div class="pizza-detail">
+                            🍞 Crust: {{ pizza.crust }}
+                        </div>
+                        <div class="pizza-detail">
+                            🧈 Base: {{ pizza.base }}
+                        </div>
+                        <div class="pizza-detail">
+                            🧀 Cheese: {{ pizza.cheese }}
+                        </div>
+                        <div class="pizza-detail">
+                            🎉 Toppings:
+                            {% if pizza.topping.all %}
+                                {% for topping in pizza.topping.all %}
+                                    <span class="topping-badge">{{ topping.topping }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted">No toppings</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center text-muted py-4">
+                <p>No pizzas in this order - did someone eat them already? 🍕👀</p>
+            </div>
+        {% endif %}
+
+        <div class="delivery-section">
+            <h3 class="delivery-title">Delivery Details 🚚</h3>
+            <div class="delivery-address">
+                {{ order.address }}
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'previous_orders' %}" class="tracking-button">
+                <i class="fas fa-map-marker-alt"></i>
+                Track Your Order
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {% endblock %}

@@ -55,7 +55,7 @@ def cart(request):
     total = cart.total_price()
 
     if request.method == "POST":
-        time.sleep(1)
+        time.sleep(0.5)
         return redirect("payment")
     return render(request, 'cart.html', {"cart": cart, "pizzas": pizzas, 'total': total})
 
