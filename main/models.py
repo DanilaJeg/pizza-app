@@ -41,6 +41,9 @@ class Cheese(models.Model):
         return self.cheese
 
 class Pizza(models.Model):
+    # for the topping to pizza relationship. I chose many to many
+    # i feel the many to many relationship is the best choice here as a pizza can have many toppings and a topping can be on many pizzas.
+    # i thought of maybe making the toppings a many to one relationship but i feel that wouldnt be the best choice as a topping can be on many pizzas.
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
     crust = models.ForeignKey(Crust, on_delete=models.CASCADE)
     base = models.ForeignKey(Base, on_delete=models.CASCADE)
@@ -85,8 +88,9 @@ class Address(models.Model):
             return f"{self.name}, {self.address1}, {self.town}, {self.county}, {self.eircode}"
 
 class Cart(models.Model):
+    # pizzas can be on many carts and a cart can have many pizzas. So i chose many to many relationship.
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    pizzas = models.ManyToManyField(Pizza, blank=True)
+    pizzas = models.ManyToManyField(Pizza)
 
     def total_price(self):
         return sum(pizza.totalPrice() for pizza in self.pizzas.all())
@@ -95,6 +99,8 @@ class Cart(models.Model):
         return f"Cart of {self.user.username}"
 
 class Orders(models.Model):
+    # for the pizza to order relationship. I chose many to many as a pizza can be on many orders and an order can have many pizzas.
+    # altough i did try and implement a one to many relationship but i feel that wouldnt be the best choice as a pizza can be on many orders.
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     #pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     pizza = models.ManyToManyField(Pizza)
@@ -107,10 +113,13 @@ class Orders(models.Model):
         return f"Order {self.id} by {self.user.username}"
 
 class Payment(models.Model):
+     # im using char field for card number and cvv as it is easier to validate, and i can use regex to validate the input in the form.
+     # also making it a char field i can allow a maximum amount of digits to be entered. So they can only go up to 16 digits for card number and 3 digits for cvv.
+     # i am also using a regex validator to make sure that only numbers are entered into the fields. In the form. 
     today = datetime.today()
     cardHolder = models.CharField(max_length=50)
-    cardNumber = models.CharField(max_length=16,validators=[RegexValidator(r'^\d{16}$', 'Enter a valid 16-digit card number.')])
+    cardNumber = models.CharField(max_length=16)
     expiration_month = models.IntegerField(validators=[MinValueValidator(today.month), MaxValueValidator(12)])
     expiration_year = models.IntegerField(validators=[MinValueValidator(today.year), MaxValueValidator(today.year + 10)])
-    cvv = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(9999)])
+    cvv = models.CharField(max_length=3)
 
