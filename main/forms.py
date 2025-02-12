@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pizza, Topping, Address 
+from .models import Pizza, Topping, Address, Payment
 
 class PizzaForm(forms.ModelForm):
     class Meta:
@@ -12,19 +12,24 @@ class PizzaForm(forms.ModelForm):
         required = False
     )
 
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = ['cardHolder', 'cardNumber', 'expiration_month', 'expiration_year', 'cvv']
+        labels = {
+            'cardHolder': 'Full Name',
+            'cardNumber': 'Card Number',
+            'expiration_month': 'Expiry Month',
+            'expiration_year': 'Expiry Year',
+            'cvv': 'CVV',
 
-
-class PaymentForm(forms.Form):
-    CARDS = [
-        ('visa', 'Visa'),
-        ('mastercard', 'MasterCard')
-    ]
-
-    cardType = forms.ChoiceField(label="Card Type", choices=CARDS, required=True)
-    cardNumber = forms.CharField(label= "Card Number", max_length=16, min_length=13, required=True)
-    cardHolder = forms.CharField(label="Full Name", max_length=100, required=True)
-    expiry_date = forms.DateField(label="Expiry Date", widget=forms.DateInput(attrs={'type': 'month'}), input_formats=['%Y-%m'], required=True)
-    cvv = forms.CharField(label="CVV", max_length=4, min_length=3, required=True)
+        }
+        widgets = {
+            'cardNumber': forms.TextInput(attrs={'pattern': '[0-9]{16}', 'title': '16 digits required'}),
+            'expiration_month': forms.TextInput(attrs={'pattern': '[0-9]{2}', 'title': '2 digits required'}),
+            'expiration_year': forms.TextInput(attrs={'pattern': '[0-9]{4}', 'title': '4 digits required'}),
+            'cvv': forms.TextInput(attrs={'pattern': '[0-9]{3}', 'title': '3 digits required'})
+        }
 
 class AddressForm(forms.ModelForm):
     class Meta:

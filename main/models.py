@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from datetime import datetime
+
 
 # Create your models here.
 class Size(models.Model):
@@ -103,3 +106,14 @@ class Orders(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
+
+
+
+class Payment(models.Model):
+    today = datetime.today()
+    cardHolder = models.CharField(max_length=50)
+    cardNumber = models.CharField(max_length=16,validators=[RegexValidator(r'^\d{16}$', 'Enter a valid 16-digit card number.')])
+    expiration_month = models.IntegerField(validators=[MinValueValidator(today.month), MaxValueValidator(12)])
+    expiration_year = models.IntegerField(validators=[MinValueValidator(today.year), MaxValueValidator(today.year + 10)])
+    cvv = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(9999)])
+
