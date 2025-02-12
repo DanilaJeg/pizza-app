@@ -228,6 +228,12 @@ Previous Orders
                 </div>
             {% endfor %}
         </div>
+        <div class = "no-orders">
+        <a href="{% url 'order' %}" class = "order-link">
+            Create new order
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        </div>
     {% else %}
         <div class="no-orders">
             <div class="pizza-float">🍕</div>
