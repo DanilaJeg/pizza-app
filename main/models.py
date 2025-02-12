@@ -94,7 +94,6 @@ class Cart(models.Model):
     def __str__(self):
         return f"Cart of {self.user.username}"
 
-
 class Orders(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     #pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
@@ -106,8 +105,6 @@ class Orders(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
-
-
 
 class Payment(models.Model):
     today = datetime.today()
